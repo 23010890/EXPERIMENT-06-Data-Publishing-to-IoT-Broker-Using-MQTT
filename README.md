@@ -1,8 +1,9 @@
 # EXPERIMENT-06-Data-Publishing-to-IoT-Broker-Using-MQTT3
- ## NAME:
- ## REGISTER NUMBER:
- ## DEPARTMENT:
- ## YEAR:
+ ## NAME: DHARSHINI S
+ ## REGISTER NUMBER: 212223110010
+ ## DEPARTMENT: CSE(IOT)
+ ## YEAR: III
+ ## DATE: 27-02-2026
  ## Aim:
 To publish data to an IoT broker using the MQTT protocol.
 
