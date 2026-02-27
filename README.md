@@ -35,7 +35,7 @@ Copy code
 import paho.mqtt.client as mqtt
 
 # Broker details
-```
+
 broker_address = "broker.hivemq.com"  # Broker address
 broker_port = 1883  # Broker port
 topic = "test/topic"  # Topic to publish to
@@ -55,7 +55,7 @@ client.disconnect()
 
 # Print confirmation message
 print(f"Message '{message}' published to topic '{topic}'")
-```
+
 Run the Script:
 
 Execute the script. It will connect to the MQTT broker, publish the message to the specified topic, and then disconnect.
@@ -73,15 +73,75 @@ Message 'Hello, MQTT!' published to topic 'test/topic'
 Broker Message: The message "Hello, MQTT!" will be published to the topic test/topic.
 
 ## Python Code 
-
-
+### Experiment 5A
+```python
+!pip install paho-mqtt
+import time
+import paho.mqtt.client as mqtt
+broker = "97825dc4ffeb4ef69020a34b200834d7.s1.eu.hivemq.cloud"
+port = 8883
+topic = "iot/demo/sensor"
+username = "hivemq.webclient.1772167962865"
+password = "C:8ieP7F1U%b2Ltr&Xw!"
+client = mqtt.Client(client_id="python-publisher-001",
+callback_api_version=mqtt.CallbackAPIVersion.VERSION2)
+client.username_pw_set(username, password)
+client.tls_set()
+def on_connect(client, userdata, flags, reasonCode, properties):
+  print("Connected to broker, reasonCode:", reasonCode)
+def on_publish(client, userdata, mid):
+  print("on_publish called, mid:", mid)
+def on_disconnect(client, userdata, reasonCode, properties):
+  print("Disconnected, reasonCode:", reasonCode)
+client.on_connect = on_connect
+client.on_publish = on_publish
+client.on_disconnect = on_disconnect
+client.connect(broker, port, keepalive=60)
+client.loop_start()
+message = "Dharshini"
+info = client.publish(topic, payload=message, qos=1, retain=True)
+info.wait_for_publish()
+time.sleep(0.2)
+client.loop_stop()
+client.disconnect()
+print(f"Message '{message}' published to topic '{topic}' (qos=1 retain=True)")
+```
+### Experiment 5B
+```python
+!pip install paho-mqtt
+import paho.mqtt.client as mqtt
+import time
+import random
+import ssl
+broker = "97825dc4ffeb4ef69020a34b200834d7.s1.eu.hivemq.cloud"
+port = 8883
+topic = "iot/demo/sensor"
+username = "hivemq.webclient.1772167962865"
+password = "C:8ieP7F1U%b2Ltr&Xw!"
+client = mqtt.Client(client_id="publisher")
+client.username_pw_set(username, password)
+client.tls_set(tls_version=ssl.PROTOCOL_TLS)
+client.connect(broker, port)
+while True:
+    temprature = round(random.uniform(20.0, 30.0), 2)
+    humidity = round(random.uniform(30.0, 70.0), 2)
+    payload = f"Temprature: {temprature:.2f} C, Humidity: {humidity:.2f}%"
+    client.publish(topic, payload)
+    print(f" Published: {payload} + {topic}")
+    time.sleep(5)
+```
   
 
 
 
 
  ## Simulation Screenshots:
-(Add screenshots of the MQTT client showing the message subscription and the message published on the broker.)
+ 
+<img width="1912" height="905" alt="Screenshot 2026-02-27 102939" src="https://github.com/user-attachments/assets/bd8778d3-d8d3-48ca-b5a3-362588ce440b" />
+
+<img width="1918" height="878" alt="Screenshot 2026-02-27 105520" src="https://github.com/user-attachments/assets/5b3744bb-2586-4411-9984-abc34f3e6168" />
+
+
 
  ## Results:
 The data was successfully published to the MQTT broker. The experiment demonstrated how to use the MQTT protocol to transfer data to an IoT broker, enabling remote communication between devices or applications. The message was confirmed to be received by the topic, and this communication can be extended to more complex IoT systems.
